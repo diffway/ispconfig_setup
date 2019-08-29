@@ -13,6 +13,38 @@
 #
 #---------------------------------------------------------------------
 
+trap _cleanup EXIT INT TERM KILL
+
+function _cleanup () {
+
+    local RET="$?"
+
+        echo "# ${SCRIPT[FILE]}[$$] End: ${RET}"
+
+    return ${RET}
+}
+
+_DEBUG=1
+
+declare -A _DEBUG
+# xtrace
+_DEBUG[TRACE]=1
+
+declare -A SCRIPT
+# real script fullpath
+SCRIPT[SOURCE]=$(readlink -f "${BASH_SOURCE[0]}")
+# real script basedir
+SCRIPT[BASEDIR]=$( cd "${SCRIPT[SOURCE]%/*}" && pwd )
+
+SCRIPT[FILE]="${SCRIPT[SOURCE]##*/}"
+SCRIPT[NAME]="${SCRIPT[FILE]%.sh}"
+
+if [[ ${#_DEBUG} -gt 0 ]] && [[ ${#_DEBUG[TRACE]} -gt 0 ]]
+then
+    export PS4='+(${BASH_SOURCE##*/}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]##*/}(): } '
+    set -x
+fi
+
 # Bash Colour
 red='\e[0;31m'
 green='\e[0;32m'

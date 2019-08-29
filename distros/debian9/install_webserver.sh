@@ -1,4 +1,16 @@
 #---------------------------------------------------------------------
+# Function: fixNginxSitesAvaliable Debian 9
+#    Creates required sites conf directories if needed
+#---------------------------------------------------------------------
+function fixNginxSitesAvaliable {
+	if ! [ -d /etc/nginx/sites-available ]
+	then
+		echo -n "Creating required conf directories... "
+		mkdir -p /etc/nginx/sites-{enabled,available} && \
+			echo -e "[${green}DONE${NC}]\n"
+	fi
+}
+#---------------------------------------------------------------------
 # Function: InstallWebServer Debian 9
 #    Install and configure Apache2, php + modules
 #---------------------------------------------------------------------
@@ -77,8 +89,8 @@ InstallWebServer() {
 	apt_install certbot
 	echo -e "[${green}DONE${NC}]\n"
   
-    echo -n "Installing PHP Opcode Cache... "	
-    apt_install php7.0-opcache php-apcu
+	echo -n "Installing PHP Opcode Cache... "	
+	apt_install php7.0-opcache php-apcu
 	echo -e "[${green}DONE${NC}]\n"
 	echo -n "Restarting Apache... "
 	service apache2 restart
@@ -88,6 +100,7 @@ InstallWebServer() {
   CFG_APACHE=n
 	echo -n "Installing Web server (nginx) and modules... "
 	apt_install nginx
+	fixNginxSitesAvaliable
 	service nginx start 
 	# apt_install php7.0 php7.0-common php7.0-gd php7.0-mysql php7.0-imap php7.0-cli php7.0-cgi php-pear php7.0-mcrypt php7.0-curl php7.0-intl php7.0-pspell php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc php7.0-xsl php7.0-zip php7.0-mbstring php7.0-imap php7.0-mcrypt php7.0-snmp php7.0-xmlrpc php7.0-xsl
 	apt_install php7.0 php7.0-common php7.0-gd php7.0-mysql php7.0-imap php7.0-cli php7.0-cgi php-pear php7.0-mcrypt libruby php7.0-curl php7.0-intl php7.0-pspell php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc php7.0-xsl php-memcache php-imagick php-gettext php7.0-zip php7.0-mbstring php7.0-soap php7.0-opcache
@@ -115,8 +128,7 @@ InstallWebServer() {
 	echo -e "[${green}DONE${NC}]\n"
   fi
 
-   
-    if [ "$CFG_PHP56" == "yes" ]; then
+	if [ "$CFG_PHP56" == "yes" ]; then
 		echo -n "Installing PHP 5.6... "
 		apt_install apt-transport-https
 		curl https://packages.sury.org/php/apt.gpg | apt-key add -  > /dev/null 2>&1
@@ -131,7 +143,7 @@ InstallWebServer() {
 	echo -e "[${green}DONE${NC}]\n"
 	
 	# echo -n "Installing PHP Opcode Cache... "	
-    # apt_install php7.0-opcache php-apcu
+	# apt_install php7.0-opcache php-apcu
 	# echo -e "[${green}DONE${NC}]\n"
   
   fi
