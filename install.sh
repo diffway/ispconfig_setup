@@ -282,7 +282,7 @@ if [ "$DISTRO" == "debian8" ]; then
 	done
 fi
 
-if [ "$DISTRO" == "debian8" ] || [ "$DISTRO" == "debian9" ] || [ "$DISTRO" == "debian10" ]; then
+if [ "$DISTRO" == "debian8" ]; then
 	while [[ ! "$CFG_MULTISERVER" =~ $RE ]]
 	do
 		CFG_MULTISERVER=$(whiptail --title "MULTISERVER SETUP" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Would you like to install ISPConfig in a MultiServer Setup?" 10 50 2 "no" "(default)" ON "yes" "" OFF 3>&1 1>&2 2>&3)
@@ -346,7 +346,7 @@ if [ -f /etc/debian_version ]; then
 	
 	if [ "$CFG_WEBMAIL" == "roundcube" ]; then
 		if [ "$DISTRO" != "debian8" ]; then
-			echo -e "\n${red}You will need to edit the username and password in /var/lib/roundcube/plugins/ispconfig3_account/config/config.inc.php of the roundcube user, as the one you set in ISPconfig ${NC}"
+			echo -e "\n${red}You will need to edit the username and password in /var/lib/roundcube/plugins/ispconfig3_account/config/config.inc.php of the roundcube user, as the one you set in ISPconfig (under System > remote users)${NC}"
 		fi
 	fi
 	if [ "$CFG_WEBSERVER" == "nginx" ]; then
